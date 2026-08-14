@@ -144,7 +144,7 @@ function builtInRules(profile: GuardianProfile): CompiledRule[] {
     {
       name: 'protected-system-path',
       action: 'deny',
-      reason: 'writes to /etc are blocked by the Guardian policy',
+      reason: 'writes to /etc are blocked',
       matches: exec => protectedPath(exec) || /(?:>|\btee\b)\s*\/etc(?:\/|\s|$)/iu.test(commandArguments(exec)),
     },
     {
@@ -347,7 +347,7 @@ export function apply(ctx: Context, config: Config = {}): void {
 
   ctx.skills.register({
     name: 'security-review',
-    description: 'Review the current change set for concrete security vulnerabilities and missing controls.',
+    description: 'Review the current change set for exploitable security defects.',
     content: skillContent(),
     source: 'bundled',
     resourceBase: { kind: 'directory', path: PACKAGE_ROOT },

@@ -7,7 +7,7 @@
 
 Runtime dangerous-operation policy, canonical output redaction, and security-review workflow for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
-The installable v0.1.1 release targets DSH 0.1.0-rc.6. npm publication is an optional future distribution channel.
+The installable v0.1.2 release targets DSH 0.1.0-rc.6. This project currently distributes prebuilt packages through GitHub Releases and is not published on npm.
 
 [简体中文](./README.zh-CN.md)
 
@@ -20,7 +20,7 @@ The installable v0.1.1 release targets DSH 0.1.0-rc.6. npm publication is an opt
 - Consecutive text blocks are scanned as one stream so splitting a credential across blocks does not bypass redaction.
 - `/security-review` loads a bundled, read-only security-review skill.
 
-The MVP does not claim to be a process sandbox, authorization system, data-loss-prevention service, or substitute for the provider policies mounted below it.
+The MVP is not a process sandbox, authorization system, data-loss-prevention service, or substitute for the provider policies mounted below it.
 
 ## Policy behavior
 
@@ -39,13 +39,13 @@ Logs contain only the tool name, match count, and redaction labels. The plugin d
 The package currently targets DSH `0.1.0-rc.6` plugin APIs and Node.js `^22.19 || >=24`.
 
 ```sh
-dsh plugin --profile web add https://github.com/lonelymoon87/dsh-guardian/releases/download/v0.1.1/dsh-guardian-0.1.1.tgz
+dsh plugin --profile web add https://github.com/lonelymoon87/dsh-guardian/releases/download/v0.1.2/dsh-guardian-0.1.2.tgz
 ```
 
 The release tarball is prebuilt and needs no build allowance. A pinned source install is also supported:
 
 ```sh
-dsh plugin --profile web add github:lonelymoon87/dsh-guardian#v0.1.1
+dsh plugin --profile web add github:lonelymoon87/dsh-guardian#v0.1.2
 ```
 
 The source install runs this package's `prepare` build. pnpm 10 and later reject it until the profile allowlists the exact package key printed by the failed command; apply that instruction and rerun the same `dsh plugin add` command. Replace `web` with `headless` to install into the one-shot agent profile.
@@ -81,7 +81,7 @@ Regular-expression flags may contain only `i`, `m`, `s`, and `u`. Invalid expres
 
 The tests cover positive and negative cases for every built-in rule, structured paths, profile behavior, downstream policy composition, nested canonical values, custom credentials, block feedback, split text blocks, disabled redaction, command dispatch, and invalid configuration.
 
-- The v0.1.1 tarball installs directly from its HTTPS release URL into a clean DSH profile.
+- The v0.1.2 tarball installs directly from its HTTPS release URL into a clean DSH profile.
 - The packed bundle and pinned GitHub source install both appear in `dsh --dump-config`.
 - CI covers Node 22.19 and Node 24; a scheduled workflow repeats the real install against `@deepseek-ai/dsh@latest`.
 - Bugs and compatibility reports are tracked in [GitHub Issues](https://github.com/lonelymoon87/dsh-guardian/issues).
