@@ -1,0 +1,4 @@
+# Added when a DeepSeek Harness profile installs the dsh-guardian bundle.
+- insert:
+    - id: guardian
+      name: dsh-guardian
