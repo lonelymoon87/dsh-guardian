@@ -2,7 +2,7 @@
 
 Runtime dangerous-operation policy, canonical output redaction, and security-review workflow for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
-> Early development: the public repository is reserved, but the package has not yet been published to npm.
+> Early development: install from the GitHub release while npm publication is pending.
 
 [简体中文](./README.zh-CN.md)
 
@@ -29,16 +29,21 @@ Built-in patterns cover AWS access-key IDs, GitHub tokens, `sk-` API keys, PEM p
 
 Logs contain only the tool name, match count, and redaction labels. The plugin does not append custom session events because the current external plugin API does not expose an ignorable event envelope; emitting a required unknown event would make old sessions unreadable after uninstall.
 
-## Development install
+## Install
 
 The package currently targets DSH `0.1.0-rc.6` plugin APIs and Node.js `^22.19 || >=24`.
 
 ```sh
-pnpm install
-pnpm run check
-npm pack
 dsh plugin --profile default add ./dsh-guardian-0.1.0.tgz
 ```
+
+Download the tarball from the latest GitHub release. A pinned source install is also supported:
+
+```sh
+dsh plugin --profile default add github:lonelymoon87/dsh-guardian#v0.1.0
+```
+
+The source install runs this package's `prepare` build. pnpm 10 and later reject it until the profile allowlists the exact package key printed by the failed command; apply that instruction and rerun the same `dsh plugin add` command. The release tarball is prebuilt and needs no build allowance.
 
 ## Configuration
 
