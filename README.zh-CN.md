@@ -2,7 +2,7 @@
 
 面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的运行时危险操作策略、规范结果脱敏和安全审查工作流。
 
-> 目前处于早期开发阶段。公开仓库已经建立，npm 包尚未发布。
+> 目前处于早期开发阶段。npm 发布尚未完成，现阶段请从 GitHub Release 安装。
 
 [English](./README.md)
 
@@ -29,16 +29,21 @@ Guardian 始终调用 `next()`。当其他策略监听器也返回决策时，�
 
 日志只记录工具名、匹配数量和脱敏标签，不记录秘密内容。插件不会追加自定义会话事件，因为当前外部插件 API 无法声明 ignorable 事件信封。写入必须识别的未知事件会导致用户卸载插件后无法读取旧会话。
 
-## 开发安装
+## 安装
 
 当前代码面向 DSH `0.1.0-rc.6` 插件 API，要求 Node.js `^22.19 || >=24`。
 
 ```sh
-pnpm install
-pnpm run check
-npm pack
 dsh plugin --profile default add ./dsh-guardian-0.1.0.tgz
 ```
+
+请先从最新 GitHub Release 下载 tarball。也可以固定版本从源码安装：
+
+```sh
+dsh plugin --profile default add github:lonelymoon87/dsh-guardian#v0.1.0
+```
+
+源码安装会运行本包的 `prepare` 构建。pnpm 10 及以上版本默认拒绝执行，第一次安装失败时请按 DSH 输出的提示，将准确的包键加入 profile 的构建白名单，然后重新执行同一条命令。Release tarball 已预构建，不需要构建权限。
 
 ## 配置
 
