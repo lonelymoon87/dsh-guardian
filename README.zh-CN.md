@@ -1,8 +1,13 @@
 # dsh-guardian
 
+[![CI](https://github.com/lonelymoon87/dsh-guardian/actions/workflows/ci.yml/badge.svg)](https://github.com/lonelymoon87/dsh-guardian/actions/workflows/ci.yml)
+[![最新 DSH 兼容性](https://github.com/lonelymoon87/dsh-guardian/actions/workflows/dsh-compatibility.yml/badge.svg)](https://github.com/lonelymoon87/dsh-guardian/actions/workflows/dsh-compatibility.yml)
+[![Release](https://img.shields.io/github/v/release/lonelymoon87/dsh-guardian)](https://github.com/lonelymoon87/dsh-guardian/releases/latest)
+[![License](https://img.shields.io/github/license/lonelymoon87/dsh-guardian)](./LICENSE)
+
 面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的运行时危险操作策略、规范结果脱敏和安全审查工作流。
 
-> 目前处于早期开发阶段。npm 发布尚未完成，现阶段请从 GitHub Release 安装。
+可安装的 v0.1.1 面向 DSH 0.1.0-rc.6；npm 是后续可选的额外分发渠道。
 
 [English](./README.md)
 
@@ -34,16 +39,22 @@ Guardian 始终调用 `next()`。当其他策略监听器也返回决策时，�
 当前代码面向 DSH `0.1.0-rc.6` 插件 API，要求 Node.js `^22.19 || >=24`。
 
 ```sh
-dsh plugin --profile default add ./dsh-guardian-0.1.0.tgz
+dsh plugin --profile default add https://github.com/lonelymoon87/dsh-guardian/releases/download/v0.1.1/dsh-guardian-0.1.1.tgz
 ```
 
-请先从最新 GitHub Release 下载 tarball。也可以固定版本从源码安装：
+Release tarball 已预构建，不需要构建权限。也可以固定版本从源码安装：
 
 ```sh
-dsh plugin --profile default add github:lonelymoon87/dsh-guardian#v0.1.0
+dsh plugin --profile default add github:lonelymoon87/dsh-guardian#v0.1.1
 ```
 
-源码安装会运行本包的 `prepare` 构建。pnpm 10 及以上版本默认拒绝执行，第一次安装失败时请按 DSH 输出的提示，将准确的包键加入 profile 的构建白名单，然后重新执行同一条命令。Release tarball 已预构建，不需要构建权限。
+源码安装会运行本包的 `prepare` 构建。pnpm 10 及以上版本默认拒绝执行，第一次安装失败时请按 DSH 输出的提示，将准确的包键加入 profile 的构建白名单，然后重新执行同一条命令。
+
+升级时用新版本的 Release URL 再执行一次 `dsh plugin add`。卸载命令：
+
+```sh
+dsh plugin --profile default remove dsh-guardian
+```
 
 ## 配置
 
@@ -65,6 +76,15 @@ dsh plugin --profile default add github:lonelymoon87/dsh-guardian#v0.1.0
 ```
 
 正则 flags 只允许 `i`、`m`、`s` 和 `u`。表达式或标签无效时，插件会在加载阶段明确失败。
+
+## 发布验证
+
+测试覆盖全部内置规则的正反例、结构化路径、策略组合、嵌套规范值、自定义凭据、跨块秘密、禁用脱敏、命令分派和非法配置。
+
+- v0.1.1 tarball 已从 HTTPS Release URL 直接安装进全新 DSH profile；
+- pack 产物与固定版本 GitHub 源码安装均通过 `dsh --dump-config` 检查；
+- CI 覆盖 Node 22.19 与 Node 24，定时任务会用 `@deepseek-ai/dsh@latest` 重跑真实安装；
+- bug 与兼容性问题统一进入 [GitHub Issues](https://github.com/lonelymoon87/dsh-guardian/issues)。
 
 ## 许可证
 
