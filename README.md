@@ -7,7 +7,7 @@
 
 Runtime dangerous-operation policy, canonical output redaction, and security-review workflow for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
-The installable v0.1.2 release targets DSH 0.1.0-rc.6. This project currently distributes prebuilt packages through GitHub Releases and is not published on npm.
+The v0.1.3 release is tested with DSH 0.1.0-rc.8 and 0.1.1-rc.1 while retaining the rc.6-compatible peer range. Prebuilt packages are distributed through GitHub Releases. The unscoped npm name is owned by another publisher, so this project is not published there.
 
 [简体中文](./README.zh-CN.md)
 
@@ -34,18 +34,24 @@ Built-in patterns cover AWS access-key IDs, GitHub tokens, `sk-` API keys, PEM p
 
 Logs contain only the tool name, match count, and redaction labels. The plugin does not append custom session events because the current external plugin API does not expose an ignorable event envelope; emitting a required unknown event would make old sessions unreadable after uninstall.
 
+## Permissions and data
+
+- Guardian inspects tool names, arguments, canonical results, and rendered output inside the current DSH process. It can deny a call or request approval but never executes the requested operation itself.
+- Redaction replaces matched secret text before downstream model-visible consumers receive the canonical result. Logs retain only the tool name, match count, and non-secret labels.
+- The plugin does not read credential stores, make network requests, write workspace files, transmit telemetry, or persist custom session events.
+
 ## Install
 
-The package currently targets DSH `0.1.0-rc.6` plugin APIs and Node.js `^22.19 || >=24`.
+The package supports DSH `>=0.1.0-rc.6 <0.2.0` plugin APIs and Node.js `^22.19 || >=24`.
 
 ```sh
-dsh plugin --profile web add https://github.com/lonelymoon87/dsh-guardian/releases/download/v0.1.2/dsh-guardian-0.1.2.tgz
+dsh plugin --profile web add https://github.com/lonelymoon87/dsh-guardian/releases/download/v0.1.3/dsh-guardian-0.1.3.tgz
 ```
 
 The release tarball is prebuilt and needs no build allowance. A pinned source install is also supported:
 
 ```sh
-dsh plugin --profile web add github:lonelymoon87/dsh-guardian#v0.1.2
+dsh plugin --profile web add github:lonelymoon87/dsh-guardian#v0.1.3
 ```
 
 The source install runs this package's `prepare` build. pnpm 10 and later reject it until the profile allowlists the exact package key printed by the failed command; apply that instruction and rerun the same `dsh plugin add` command. Replace `web` with `headless` to install into the one-shot agent profile.
@@ -81,9 +87,9 @@ Regular-expression flags may contain only `i`, `m`, `s`, and `u`. Invalid expres
 
 The tests cover positive and negative cases for every built-in rule, structured paths, profile behavior, downstream policy composition, nested canonical values, custom credentials, block feedback, split text blocks, disabled redaction, command dispatch, and invalid configuration.
 
-- The v0.1.2 tarball installs directly from its HTTPS release URL into a clean DSH profile.
+- The v0.1.3 tarball installs directly from its HTTPS release URL into clean DSH 0.1.0-rc.8 and 0.1.1-rc.1 profiles.
 - The packed bundle and pinned GitHub source install both appear in `dsh --dump-config`.
-- CI covers Node 22.19 and Node 24; a scheduled workflow repeats the real install against `@deepseek-ai/dsh@latest`.
+- CI covers Node 22.19 and Node 24; a compatibility matrix repeats the real install against DSH 0.1.0-rc.8 plus the `latest` and `next` npm tags.
 - Bugs and compatibility reports are tracked in [GitHub Issues](https://github.com/lonelymoon87/dsh-guardian/issues).
 
 ## License

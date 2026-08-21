@@ -7,7 +7,7 @@
 
 面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的运行时危险操作策略、规范结果脱敏和安全审查工作流。
 
-可安装的 v0.1.2 面向 DSH 0.1.0-rc.6。本项目当前通过 GitHub Release 分发预构建包，尚未发布 npm 包。
+v0.1.3 已针对 DSH 0.1.0-rc.8 与 0.1.1-rc.1 验证，同时保留兼容 rc.6 的 peer 范围。项目继续通过 GitHub Release 分发预构建包。未加 scope 的 npm 包名已被其他发布者占用，因此本项目不在该名称下发布。
 
 [English](./README.md)
 
@@ -34,18 +34,24 @@ Guardian 始终调用 `next()`。当其他策略监听器也返回决策时，�
 
 日志只记录工具名、匹配数量和脱敏标签，不记录秘密内容。插件不会追加自定义会话事件，因为当前外部插件 API 无法声明 ignorable 事件信封。写入必须识别的未知事件会导致用户卸载插件后无法读取旧会话。
 
+## 权限与数据
+
+- Guardian 在当前 DSH 进程内检查工具名、参数、规范结果和渲染输出。它可以拒绝调用或要求审批，但不会自行执行目标操作。
+- 脱敏会在后续模型可见消费者收到规范结果前替换秘密文本。日志只保留工具名、匹配数量和不含秘密的标签。
+- 插件不读取凭据存储，不发起网络请求，不写入工作区文件，不发送遥测，也不持久化自定义会话事件。
+
 ## 安装
 
-当前代码面向 DSH `0.1.0-rc.6` 插件 API，要求 Node.js `^22.19 || >=24`。
+当前代码支持 DSH `>=0.1.0-rc.6 <0.2.0` 插件 API，要求 Node.js `^22.19 || >=24`。
 
 ```sh
-dsh plugin --profile web add https://github.com/lonelymoon87/dsh-guardian/releases/download/v0.1.2/dsh-guardian-0.1.2.tgz
+dsh plugin --profile web add https://github.com/lonelymoon87/dsh-guardian/releases/download/v0.1.3/dsh-guardian-0.1.3.tgz
 ```
 
 Release tarball 已预构建，不需要构建权限。也可以固定版本从源码安装。
 
 ```sh
-dsh plugin --profile web add github:lonelymoon87/dsh-guardian#v0.1.2
+dsh plugin --profile web add github:lonelymoon87/dsh-guardian#v0.1.3
 ```
 
 源码安装会运行本包的 `prepare` 构建。pnpm 10 及以上版本默认拒绝执行，第一次安装失败时请按 DSH 输出的提示，将准确的包键加入 profile 的构建白名单，然后重新执行同一条命令。需要装进一次性 Agent profile 时，把命令中的 `web` 换成 `headless`。
@@ -81,9 +87,9 @@ dsh plugin --profile web remove dsh-guardian
 
 测试覆盖全部内置规则的正反例、结构化路径、策略组合、嵌套规范值、自定义凭据、跨块秘密、禁用脱敏、命令分派和非法配置。
 
-- v0.1.2 tarball 已从 HTTPS Release URL 直接安装进全新 DSH profile；
+- v0.1.3 tarball 已从 HTTPS Release URL 直接安装进全新的 DSH 0.1.0-rc.8 与 0.1.1-rc.1 profile；
 - pack 产物与固定版本 GitHub 源码安装均通过 `dsh --dump-config` 检查；
-- CI 覆盖 Node 22.19 与 Node 24，定时任务会用 `@deepseek-ai/dsh@latest` 重跑真实安装；
+- CI 覆盖 Node 22.19 与 Node 24，兼容矩阵会分别使用 DSH 0.1.0-rc.8、npm `latest` 与 `next` 标签重跑真实安装；
 - bug 与兼容性问题统一进入 [GitHub Issues](https://github.com/lonelymoon87/dsh-guardian/issues)。
 
 ## 许可证
